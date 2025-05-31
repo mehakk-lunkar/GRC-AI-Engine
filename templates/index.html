@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>GRC AI Engine</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .error { color: red; }
+        .tool { margin-bottom: 20px; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        label { display: block; margin-top: 10px; }
+        input, textarea { width: 100%; padding: 8px; margin-top: 5px; }
+        button { margin-top: 15px; padding: 10px 20px; }
+    </style>
+</head>
+<body>
+    <h1>GRC AI Engine</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <p class="{{ category }}">{{ message }}</p>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="post" action="/">
+        <label for="task">Compliance Task:</label>
+        <textarea id="task" name="task" rows="3" required>{{ request.form.task or '' }}</textarea>
+
+        <label for="compliance">Compliance Name:</label>
+        <input type="text" id="compliance" name="compliance" value="{{ request.form.compliance or '' }}" required />
+
+        <label for="jwt_token">JWT Token:</label>
+        <input type="bearer" id="jwt_token" name="jwt_token" required />
+
+        <button type="submit">Lookup Tools</button>
+    </form>
+
+    {% if tools %}
+        <h2>Tools Found:</h2>
+        {% for tool in tools %}
+            <div class="tool">
+                <h3>{{ tool.tool }}</h3>
+                <pre>{{ tool.Steps }}</pre>
+            </div>
+        {% endfor %}
+    {% endif %}
+</body>
+</html>
